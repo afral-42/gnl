@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/03 17:53:19 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:04:24 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ size_t	contains_newline(t_list *lst_last)
 {
 	size_t	i;
 
+	if (!lst_last)
+		return (0);
 	i = 0;
 	while ((lst_last->data)[i])
 	{
@@ -46,10 +48,10 @@ void	*free_everything(t_list *lst)
 	while (node)
 	{
 		temp = node->next;
+		free(node->data);
 		free(node);
 		node = temp;
 	}
-	free(lst);
 	return (NULL);
 }
 
@@ -176,9 +178,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	lst = NULL;
 	lst_last = NULL;
-	if (stash[0])
-		if (!push_stash(stash, &lst, &lst_last))
-			return (NULL);
+	if (!push_stash(stash, &lst, &lst_last))
+		return (NULL);
 	read_len = 1;
 	while (read_len > 0 && !contains_newline(lst_last))
 		read_len = extract_buffer(&lst, &lst_last, fd);
@@ -199,6 +200,8 @@ int main(void)
     int fd = open("tests/caca.txt", O_RDONLY);
 	char	*line;
 
+	line = get_next_line(fd);
+	printf("%s", line);
 	line = get_next_line(fd);
 	printf("%s", line);
 }
