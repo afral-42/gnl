@@ -26,4 +26,9 @@ typedef struct s_list
     struct s_list	*next;
 }	t_list;
 
+size_t	ft_strlen_to_newline(char *str);
+size_t	contains_newline(t_list *lst_last);
+void	*free_everything(t_list *lst);
+char	*get_next_line(int fd);
+
 #endif
