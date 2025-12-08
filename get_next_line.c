@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/08 10:09:49 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/08 15:07:10 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ ssize_t extract_buffer(t_list **lst, t_list **lst_last, int fd)
         return (-1);
     }
     read_len = read(fd, node->data, BUFFER_SIZE);
-    node->data[read_len] = '\0';
+	if (read_len >= 0)
+		node->data[read_len] = '\0';
 	if ((!lst) || !(*lst))
 		*lst = node;
     if (lst_last && *lst_last)
@@ -133,10 +134,10 @@ char	*get_next_line(int fd)
 	static char	stash[BUFFER_SIZE + 1];
 	ssize_t		read_len;
 
-	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, NULL, 0) < 0)
-		return (NULL);
 	lst = NULL;
 	lst_last = NULL;
+	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, NULL, 0) < 0)
+		return (free_everything(lst, stash, -1));
 	if (!push_stash(stash, &lst, &lst_last))
 		return (NULL);
 	read_len = 1;
@@ -156,7 +157,7 @@ char	*get_next_line(int fd)
 
 // int main(void)
 // {
-//     int fd = open("tests/1.txt", O_RDONLY);
+//     int fd = open("tests/epee.txt", O_RDONLY);
 // 	char	*line;
 
 // 	line = get_next_line(fd);
@@ -189,6 +190,7 @@ char	*get_next_line(int fd)
 // 	line = get_next_line(fd);
 // 	printf("%s", line);
 // 	free(line);
+// 	close(fd);
 // 		line = get_next_line(fd);
 // 	printf("%s", line);
 // 	free(line);

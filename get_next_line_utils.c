@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/08 10:08:41 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:44:11 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ void	*free_everything(t_list *lst, char *stash, ssize_t read_len)
 		node = temp;
 	}
 	i = 0;
-	while (read_len == 0 && i < BUFFER_SIZE)
-	{
-		stash[i] = 0;
-		i++;
-	}
+	while (read_len <= 0 && i < BUFFER_SIZE)
+		stash[i++] = 0;
 	return (NULL);
 }
