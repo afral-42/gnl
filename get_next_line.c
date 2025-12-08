@@ -6,33 +6,21 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/08 15:07:10 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:38:00 by abounoua         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 t_list	*push_stash(const char *s, t_list **lst, t_list **lst_last)
 {
-	size_t  len;
-    char    *dup;
+	char	*dup;
 	t_list	*stash;
 
-	len = 0;
-	while (s[len])
-        len++;
-    dup = malloc(sizeof(char) * (len + 1));
-    if (!dup)
-        return (NULL);
-    len = 0;
-    while (s[len])
-	{
-        dup[len] = s[len];
-		len++;
-	}
-    dup[len] = '\0';
-    stash = malloc(sizeof(t_list));
+	dup = ft_strdup(s);
+	if (!dup)
+		return (NULL);
+	stash = malloc(sizeof(t_list));
 	if (!stash)
 	{
 		free(dup);
@@ -45,73 +33,73 @@ t_list	*push_stash(const char *s, t_list **lst, t_list **lst_last)
 	return (stash);
 }
 
-ssize_t extract_buffer(t_list **lst, t_list **lst_last, int fd)
+ssize_t	extract_buffer(t_list **lst, t_list **lst_last, int fd)
 {
-    t_list  *node;
-    ssize_t read_len;
+	t_list	*node;
+	ssize_t	read_len;
 
 	if (!lst || !(*lst))
 		return (-1);
-    node = malloc(sizeof(t_list));
-    if (!node)
-        return (-1);
-    node->next = NULL;
-    node->data = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!(node->data))
-    {
-        free(node);
-        return (-1);
-    }
-    read_len = read(fd, node->data, BUFFER_SIZE);
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (-1);
+	node->next = NULL;
+	node->data = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!(node->data))
+	{
+		free(node);
+		return (-1);
+	}
+	read_len = read(fd, node->data, BUFFER_SIZE);
 	if (read_len >= 0)
 		node->data[read_len] = '\0';
 	if ((!lst) || !(*lst))
 		*lst = node;
-    if (lst_last && *lst_last)
-        (*lst_last)->next = node;
-    (*lst_last) = node;
-    return (read_len);
+	if (lst_last && *lst_last)
+		(*lst_last)->next = node;
+	(*lst_last) = node;
+	return (read_len);
 }
 
-char    *allocate_line_and_init(t_list *lst, size_t *i, t_list **n)
+char	*allocate_line_and_init(t_list *lst, size_t *i, t_list **n)
 {
-    size_t  len;
-    t_list  *node;
-    char    *line;
+	size_t	len;
+	t_list	*node;
+	char	*line;
 
-    len = 0;
+	len = 0;
 	node = lst;
-    while (node)
-    {
-        len += ft_strlen_to_newline(node->data);
-        node = node->next;
-    }
+	while (node)
+	{
+		len += ft_strlen_to_newline(node->data);
+		node = node->next;
+	}
 	if (!len)
 		return (NULL);
-    line = malloc(sizeof(char) * (len + 1));
-    if (!line)
-        return (NULL);
-    line[len] = '\0';
+	line = malloc(sizeof(char) * (len + 1));
+	if (!line)
+		return (NULL);
+	line[len] = '\0';
 	*i = 0;
 	*n = lst;
-    return (line);
+	return (line);
 }
 
-char    *parse_line_and_stash(t_list *lst, char *stash)
+char	*parse_line_and_stash(t_list *lst, char *stash)
 {
-    t_list  *node;
-    char    *line;
-    size_t  i;
-    size_t  j;
-    
+	t_list	*node;
+	char	*line;
+	size_t	i;
+	size_t	j;
+
 	line = allocate_line_and_init(lst, &i, &node);
-    if (!line)
-        return (NULL);
-    while (node)
-    {
-        j = 0;
-        while ((node->data)[j] && (node->data)[j] != '\n')
-            line[i++] = (node->data)[j++];
+	if (!line)
+		return (NULL);
+	while (node)
+	{
+		j = 0;
+		while ((node->data)[j] && (node->data)[j] != '\n')
+			line[i++] = (node->data)[j++];
 		if ((node->data)[j] == '\n')
 		{
 			line[i] = '\n';
@@ -122,7 +110,7 @@ char    *parse_line_and_stash(t_list *lst, char *stash)
 			stash[i] = '\0';
 		}
 		node = node->next;
-    }
+	}
 	return (line);
 }
 
@@ -149,52 +137,3 @@ char	*get_next_line(int fd)
 	free_everything(lst, stash, read_len);
 	return (line);
 }
-
-// #include <unistd.h>
-// #include <fcntl.h>
-// #include <sys/stat.h>
-// #include <stdio.h>
-
-// int main(void)
-// {
-//     int fd = open("tests/epee.txt", O_RDONLY);
-// 	char	*line;
-
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 		line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 		line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 		line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 		line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	close(fd);
-// 		line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// 	line = get_next_line(fd);
-// 	printf("%s", line);
-// 	free(line);
-// }
