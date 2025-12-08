@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/03 18:04:24 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:08:41 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ size_t	contains_newline(t_list *lst_last)
 	return (0);
 }
 
-void	*free_everything(t_list *lst)
+void	*free_everything(t_list *lst, char *stash, ssize_t read_len)
 {
 	t_list	*node;
 	t_list	*temp;
+	size_t	i;
 
 	node = lst;
 	while (node)
@@ -51,6 +52,12 @@ void	*free_everything(t_list *lst)
 		free(node->data);
 		free(node);
 		node = temp;
+	}
+	i = 0;
+	while (read_len == 0 && i < BUFFER_SIZE)
+	{
+		stash[i] = 0;
+		i++;
 	}
 	return (NULL);
 }

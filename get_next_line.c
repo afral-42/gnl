@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/03 18:04:24 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:09:49 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_list	*push_stash(const char *s, t_list **lst, t_list **lst_last)
 		free(dup);
 		return (NULL);
 	}
+	stash->next = NULL;
 	stash->data = dup;
 	*lst = stash;
 	*lst_last = stash;
@@ -142,16 +143,16 @@ char	*get_next_line(int fd)
 	while (read_len > 0 && !contains_newline(lst_last))
 		read_len = extract_buffer(&lst, &lst_last, fd);
 	if (read_len == -1)
-		return (free_everything(lst));
+		return (free_everything(lst, stash, read_len));
 	line = parse_line_and_stash(lst, stash);
-	free_everything(lst);
+	free_everything(lst, stash, read_len);
 	return (line);
 }
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <stdio.h>
+// #include <unistd.h>
+// #include <fcntl.h>
+// #include <sys/stat.h>
+// #include <stdio.h>
 
 // int main(void)
 // {
@@ -159,6 +160,36 @@ char	*get_next_line(int fd)
 // 	char	*line;
 
 // 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 		line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 		line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 		line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 		line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 		line = get_next_line(fd);
 // 	printf("%s", line);
 // 	free(line);
 // 	line = get_next_line(fd);
