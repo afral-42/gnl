@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/10 15:16:37 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/10 15:22:58 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static t_list	*push_stash(const char *s, t_list **lst, t_list **lst_last)
 {
@@ -85,7 +85,8 @@ static char	*allocate_line_and_init(t_list *lst, size_t *i, t_list **n)
 	return (line);
 }
 
-static char	*parse_line_and_stash(t_list *lst, char *stash)
+static char	*parse_line_and_stash(t_list *lst,
+	char stash[FD_MAX][BUFFER_SIZE + 1], int fd)
 {
 	t_list	*node;
 	char	*line;
@@ -106,8 +107,8 @@ static char	*parse_line_and_stash(t_list *lst, char *stash)
 			j++;
 			i = 0;
 			while ((node->data)[j] != '\0')
-				stash[i++] = (node->data)[j++];
-			stash[i] = '\0';
+				stash[fd][i++] = (node->data)[j++];
+			stash[fd][i] = '\0';
 		}
 		node = node->next;
 	}
@@ -119,21 +120,21 @@ char	*get_next_line(int fd)
 	t_list		*lst;
 	t_list		*lst_last;
 	char		*line;
-	static char	stash[BUFFER_SIZE + 1];
+	static char	stash[FD_MAX][BUFFER_SIZE + 1];
 	ssize_t		read_len;
 
 	lst = NULL;
 	lst_last = NULL;
 	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, NULL, 0) < 0)
-		return (free_everything(lst, stash, -1));
-	if (!push_stash(stash, &lst, &lst_last))
+		return (free_everything_b(lst, stash, -1, fd));
+	if (!push_stash(stash[fd], &lst, &lst_last))
 		return (NULL);
 	read_len = 1;
 	while (read_len > 0 && !contains_newline(lst_last))
 		read_len = extract_buffer(&lst, &lst_last, fd);
 	if (read_len == -1)
-		return (free_everything(lst, stash, read_len));
-	line = parse_line_and_stash(lst, stash);
-	free_everything(lst, stash, read_len);
+		return (free_everything_b(lst, stash, read_len, fd));
+	line = parse_line_and_stash(lst, stash, fd);
+	free_everything_b(lst, stash, read_len, fd);
 	return (line);
 }
