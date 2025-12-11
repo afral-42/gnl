@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/10 15:22:58 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/11 20:06:01 by abounoua         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ char	*get_next_line(int fd)
 
 	lst = NULL;
 	lst_last = NULL;
-	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, NULL, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE < 0)
 		return (free_everything_b(lst, stash, -1, fd));
 	if (!push_stash(stash[fd], &lst, &lst_last))
 		return (NULL);
