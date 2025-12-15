@@ -6,11 +6,11 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/10 15:22:38 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/15 17:00:55 by abounoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen_to_newline(char *str)
 {
