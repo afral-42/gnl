@@ -6,7 +6,7 @@
 /*   By: abounoua <abounoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:13:10 by abounoua          #+#    #+#             */
-/*   Updated: 2025/12/15 17:00:55 by abounoua         ###   ########.fr       */
+/*   Updated: 2025/12/18 10:22:02 by abounoua         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	*free_everything_b(t_list *lst,
 	t_list	*temp;
 	size_t	i;
 
+	if (fd < 0 || BUFFER_SIZE < 0 || fd > FD_MAX)
+		return (NULL);
 	node = lst;
 	while (node)
 	{
